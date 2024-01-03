@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlogsMessageBus
+namespace EcommerceMessageBus
 {
     public interface IMessageBus
     {

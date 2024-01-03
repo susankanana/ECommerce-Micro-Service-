@@ -72,7 +72,8 @@ namespace CartService.Controllers
             else
             {
                 //check if productId in this cart is in the cart items table. i.e if it is a new product or an existing product.
-                var cartProduct = cart.CartItems.Find(x => x.ProductId == product.ProductId);
+                var cartProduct = cart.Items.Find(x => x.ProductId == product.ProductId);
+                //var cartProduct = _cartItemService.GetCartItemByProductId(product.ProductId);
                 if (cartProduct == null) //either a new product or cart has no product
                 {
                     if (cartRequest.item.Quantity == 0)//empty cart
@@ -99,7 +100,7 @@ namespace CartService.Controllers
                         _response.ErrorMessage = "The quantity you want exceeds the available stock !";
                         return BadRequest(_response);
                     }
-                    await _cartItemService.UpdateCartItemQuantity(cartProduct.ProductId, newQuantity);
+                    await _cartItemService.UpdateCartItemQuantity(cartProduct.CartItemId, newQuantity);
                 }
                 _response.Result = "Product Added To Cart Successfully !";
                 return Ok(_response);
@@ -133,12 +134,12 @@ namespace CartService.Controllers
             }
 
             var cart = await _cartService.GetCartByUserId(new Guid(userId));
-            if (cart == null || cart.CartItems.Count == 0)
+            if (cart == null || cart.Items.Count == 0)
             {
                 _response.Result = "Your Cart is Empty!";
                 return Ok(_response);
             }
-            var cartItem = cart.CartItems.Find(x => x.ProductId == item.ProductId);
+            var cartItem = cart.Items.Find(x => x.ProductId == item.ProductId);
 
             if (cartItem == null)
             {

@@ -49,7 +49,7 @@ namespace ProductService.Controllers
 
 
         [HttpGet("{Id}")]
-        [Authorize]
+        
         public async Task<ActionResult<ResponseDto>> GetProduct(Guid Id)
         {
 

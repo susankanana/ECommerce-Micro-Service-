@@ -4,6 +4,7 @@ namespace OrderService.Services.IServices
 {
     public interface ICart
     {
-        Task<CartDto> GetCartById(Guid cartId);
+        Task<CartDto> GetCartByUserId(Guid userId, string token);
+        Task<bool> DeleteCart(Guid userId, string token);
     }
 }

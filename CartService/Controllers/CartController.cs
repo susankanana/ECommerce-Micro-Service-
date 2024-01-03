@@ -32,7 +32,7 @@ namespace CartService.Controllers
         public async Task<ActionResult<ResponseDto>> GetExistingCarts()
         {
 
-            var res = await _cartService.GetCart();
+            var res = await _cartService.GetCarts();
             _response.Result = res;
             return Ok(_response);
 
@@ -45,7 +45,7 @@ namespace CartService.Controllers
         {
             var cart = await _cartService.GetCartByUserId(UserId);
 
-            if (cart == null || cart.CartItems.Count == 0)
+            if (cart == null || cart.Items.Count == 0)
             {
                 _response.Result = "Your Cart is Empty !!";
                 return Ok(_response);
@@ -73,6 +73,8 @@ namespace CartService.Controllers
                 total += item.ProductPrice * item.Quantity;
             }
            cart.CartTotal = total;
+            await _cartService.UpdateCartTotals(UserId, total);
+           await _cartService.SaveChanges();
 
             _response.Result = cart;
             return Ok(_response);
@@ -106,6 +108,7 @@ namespace CartService.Controllers
             {
                 cart.CouponCode = coupon.CouponCode;
                 cart.CouponDiscount = coupon.CouponAmount;
+                await _cartService.ApplyCoupon(UserId, coupon.CouponCode, coupon.CouponAmount);
                 await _cartService.SaveChanges();
                 _response.Result = "Code applied";
                 return Ok(_response);

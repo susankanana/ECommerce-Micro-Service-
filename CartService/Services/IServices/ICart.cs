@@ -5,10 +5,12 @@ namespace CartService.Services.IServices
 {
     public interface ICart
     {
-        Task<List<CartAndCartItemsResponseDto>> GetCart();
+        Task<List<CartAndCartItemsResponseDto>> GetCarts();
         Task<Cart> GetCartById(Guid Id);
-        Task<Cart> GetCartByUserId(Guid Id);
+        Task<CartAndCartItemsResponseDto> GetCartByUserId(Guid Id);
         Task<string> AddCart(Cart cart);
         Task SaveChanges();
+        Task UpdateCartTotals(Guid userId, double total);
+        Task ApplyCoupon(Guid userId, string couponCode, int couponAmount);
     }
 }

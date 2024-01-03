@@ -8,7 +8,7 @@ namespace OrderService.Services.IServices
     {
         Task<string> MakeOrder(Order order);
         Task<Order> GetOrderByUserId(Guid userId);
-        Task<StripeRequestDto> MakePayments(StripeRequestDto stripeRequestDto);
-        Task<bool> ValidatePayments(Guid OrderId);
+        Task<StripeRequestDto> MakePayments(StripeRequestDto stripeRequestDto, string token);
+        Task<bool> ValidatePayments(Guid OrderId, string token);
     }
 }

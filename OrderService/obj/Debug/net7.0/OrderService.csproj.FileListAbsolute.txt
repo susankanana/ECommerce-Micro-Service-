@@ -85,3 +85,8 @@ C:\Users\user\source\repos\EcommerceMS\OrderService\obj\Debug\net7.0\refint\Orde
 C:\Users\user\source\repos\EcommerceMS\OrderService\obj\Debug\net7.0\OrderService.pdb
 C:\Users\user\source\repos\EcommerceMS\OrderService\obj\Debug\net7.0\OrderService.genruntimeconfig.cache
 C:\Users\user\source\repos\EcommerceMS\OrderService\obj\Debug\net7.0\ref\OrderService.dll
+C:\Users\user\source\repos\EcommerceMS\OrderService\bin\Debug\net7.0\Azure.Core.Amqp.dll
+C:\Users\user\source\repos\EcommerceMS\OrderService\bin\Debug\net7.0\Azure.Messaging.ServiceBus.dll
+C:\Users\user\source\repos\EcommerceMS\OrderService\bin\Debug\net7.0\Microsoft.Azure.Amqp.dll
+C:\Users\user\source\repos\EcommerceMS\OrderService\bin\Debug\net7.0\EcommerceMessageBus.dll
+C:\Users\user\source\repos\EcommerceMS\OrderService\bin\Debug\net7.0\EcommerceMessageBus.pdb

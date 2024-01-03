@@ -37,6 +37,11 @@ namespace CartService.Services
             return await _context.CartItems.Where(x => x.CartItemId == cartItemId).FirstOrDefaultAsync();
         }
 
+        public async Task<CartItem> GetCartItemByProductId(Guid productId)
+        {
+            return await _context.CartItems.Where(x => x.ProductId == productId).FirstOrDefaultAsync();
+        }
+
         public async Task<bool> RemoveProductFromCart(Guid productId)
         {
             var cartItem = await _context.CartItems.Where(x => x.ProductId == productId).FirstOrDefaultAsync();

@@ -3,7 +3,7 @@ using OrderService.Models.Dtos;
 using Stripe;
 using OrderService.Data;
 using Stripe.Checkout;
-using BlogsMessageBus;
+using EcommerceMessageBus;
 using OrderService.Models;
 using Microsoft.Extensions.Options;
 
@@ -14,21 +14,19 @@ namespace OrderService.Services.IServices
         private readonly ApplicationDbContext _context;
         private readonly IUser _userService;
         private readonly IMessageBus _messageBus;
-        private readonly CartItemService _cartItemService;
-        private readonly CartsService _cartService;
-        public OrdersService(ApplicationDbContext context, IUser user, IMessageBus messageBus, CartItemService cartItemService , CartsService cartService)
+        private readonly ICart _cartService;
+        public OrdersService(ApplicationDbContext context, IUser user, IMessageBus messageBus, ICart cartService)
         {
             _context = context;
             _userService = user;
             _messageBus = messageBus;
-            _cartItemService = cartItemService;
             _cartService = cartService;
 
         }
 
         public async Task<string> MakeOrder(Order order)
         {
-            _context.Orders.Add(order);
+            await _context.Orders.AddAsync(order);
             await _context.SaveChangesAsync();
             return "Order made successfully";
         }
@@ -38,10 +36,10 @@ namespace OrderService.Services.IServices
             return await _context.Orders.Where(x => x.UserId == userId).FirstOrDefaultAsync();
         }
 
-        public async Task<StripeRequestDto> MakePayments(StripeRequestDto stripeRequestDto)
+        public async Task<StripeRequestDto> MakePayments(StripeRequestDto stripeRequestDto , string token)
         {
             var order = await _context.Orders.Where(x => x.OrderId == stripeRequestDto.OrderId).FirstOrDefaultAsync();
-            var orderProducts = await _context.OrderProducts.Where(x => x.OrderId == order.OrderId).ToListAsync();
+            var cart = await _cartService.GetCartByUserId(order.UserId , token);
             var options = new SessionCreateOptions()
             {
                 SuccessUrl = stripeRequestDto.ApprovedUrl,
@@ -50,20 +48,19 @@ namespace OrderService.Services.IServices
                 LineItems = new List<SessionLineItemOptions>()
             };
 
-            foreach (var orderProduct in orderProducts)
+            foreach (var cartItem in cart.Items)
             {
-                var cartItem = _cartItemService.GetCartItemById(orderProduct.CartItemId);
                 var item = new SessionLineItemOptions()
                 {
                     PriceData = new SessionLineItemPriceDataOptions()
                     {
-                        UnitAmount = (long)order.OrderTotal * 100,
+                        UnitAmount = (long) cartItem.ProductPrice * 100,
                         Currency = "kes",
 
                         ProductData = new SessionLineItemPriceDataProductDataOptions()
                         {
                             Name = cartItem.ProductName,
-                            Images = new List<string> { "https://imgs.search.brave.com/av4uh1BAXrv7q2gkJt-E709vrIz3mB1-wrcPDtDyZNI/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93d3cu/ZXhwZXJ0YWZyaWNh/LmNvbS9pbWFnZXMv/YXJlYS8xODI5X2wu/anBn" }
+                            Images = new List<string> { "https://images.unsplash.com/photo-1564557287817-3785e38ec1f5?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8aG9vZGllfGVufDB8fDB8fHww" }
                         }
                      },
                         Quantity = cartItem.Quantity
@@ -74,29 +71,30 @@ namespace OrderService.Services.IServices
                 options.LineItems.Add(item);
             }
             //discount
-            var cart = _cartService.GetCartById(cartItem.CartId);
+            
             var DiscountObj = new List<SessionDiscountOptions>()
             {
                 new SessionDiscountOptions()
                 {
-                    Coupon=cart.CouponCode
+                    Coupon=order.CouponCode
                 }
             };
 
-            if (cart.Discount > 0)
+            if (order.CouponDiscount > 0)
             {
                 options.Discounts = DiscountObj;
 
             }
+            //service receives a good documentation of what we are paying for
             var service = new SessionService();
-            Session session = service.Create(options);
+            Session session = service.Create(options); //an instance of a session that will come with more info that we need to open stripe.
 
-            // URL//ID
+            // info given back to us will be a URL and ID
 
             stripeRequestDto.StripeSessionUrl = session.Url;
             stripeRequestDto.StripeSessionId = session.Id;
 
-            //update Database =>status/ SessionId 
+            // finally update the Database => status should move from pending / pass SessionId above
 
             order.StripeSessionId = session.Id;
             order.Status = "Ongoing";
@@ -109,12 +107,13 @@ namespace OrderService.Services.IServices
     
 
 
-        public async Task<bool> ValidatePayments(Guid OrderId)
+        public async Task<bool> ValidatePayments(Guid OrderId, string token)
         {
             var order = await _context.Orders.Where(x => x.OrderId == OrderId).FirstOrDefaultAsync();
+            var cart = await _cartService.GetCartByUserId(order.UserId, token);
 
             var service = new SessionService();
-            Session session = service.Get(order.StripeSessionId);
+            Session session = service.Get(order.StripeSessionId); //select session we want to validate
 
             PaymentIntentService paymentIntentService = new PaymentIntentService();
 
@@ -125,8 +124,9 @@ namespace OrderService.Services.IServices
                 //the payment was success
 
                 order.Status = "Paid";
-                order.PaymentIntent = paymentIntent.Id;
+                order.PaymentIntent = paymentIntent.Id;  //can track the payment
                 await _context.SaveChangesAsync();
+                // await _cartService.DeleteCart(cart.CartId, token);
                 //payment validation was a success
                 var user = await _userService.GetUserById(order.UserId.ToString());
 

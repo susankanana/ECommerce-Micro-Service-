@@ -1,4 +1,3 @@
-using BlogsMessageBus;
 using EcommerceMessageBus;
 using Microsoft.EntityFrameworkCore;
 using OrderService.Data;
@@ -17,9 +16,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IOrder, OrdersService>();
 builder.Services.AddScoped<IUser, UserService>();
-builder.Services.AddScoped<IMessageBus, MessageBus>();
-builder.Services.AddScoped<ICartItem, CartItemService>();
 builder.Services.AddScoped<ICart, CartsService>();
+builder.Services.AddScoped<IMessageBus, MessageBus>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -34,7 +32,6 @@ builder.AddAuth();
 builder.AddSwaggenGenExtension();
 
 builder.Services.AddHttpClient("Users", c => c.BaseAddress = new Uri(builder.Configuration.GetValue<string>("ServiceURl:UserService")));
-builder.Services.AddHttpClient("CartItems", c => c.BaseAddress = new Uri(builder.Configuration.GetValue<string>("ServiceURl:CartItemService")));
 builder.Services.AddHttpClient("Carts", c => c.BaseAddress = new Uri(builder.Configuration.GetValue<string>("ServiceURl:CartService")));
 
 var app = builder.Build();
