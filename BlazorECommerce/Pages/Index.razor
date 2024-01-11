@@ -1,0 +1,29 @@
+﻿@page "/"
+@inject HttpClient Http
+<PageTitle>Index</PageTitle>
+
+<h2 style="font-family:Cambria; color:purple">Welcome to Boutique Mart</h2>
+One stop shop for the modern woman..
+
+<div class="row">
+@foreach (var product in products)
+{
+    <SingleProductCart product="product" ></SingleProductCart>
+}
+</div>
+@code{
+    List<Product> products { get; set; } = new List<Product>();
+    protected override async Task OnInitializedAsync()
+    {
+
+        //call api to get the products to display
+
+        var productSaved = await Http.GetFromJsonAsync<List<Product>>("sample-data/products.json");
+        if (productSaved.Any())
+        {
+            products = productSaved;
+        }
+
+    }
+}
+

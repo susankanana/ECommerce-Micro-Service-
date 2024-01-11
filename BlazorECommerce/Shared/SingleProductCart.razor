@@ -1,0 +1,27 @@
+﻿<div class="card shadow col-4 m-3 p-4" style="width: 18rem;">
+    @foreach (var productImage in product.ProductImages)
+    {
+        <img src="@productImage.Image" class="card-img-top" alt="product.ProductName">
+    }
+    <div class="card-body">
+        <h5 class="card-title">@product.ProductName</h5>
+
+        <div class="d-flex justify-content-between">
+            <span>
+                @product.ProductDescription
+            </span>
+            <span>
+                @product.ProductPrice
+            </span>
+        </div>
+        <button class="btn btn-primary m-1 justify-content-around">Add To Cart</button>
+    </div>
+</div>
+
+
+@code {
+
+    [Parameter]
+
+    public Product product { get; set; } = default!; 
+}

@@ -1,0 +1,38 @@
+﻿@page "/register"
+@inject NavigationManager navigation
+@inject AuthServiceRegister authServiceRegister
+@inject IJSRuntime _jsRuntime
+
+<EditForm Model="@registerUser" OnValidSubmit="RegisteredUser">
+    <DataAnnotationsValidator />
+    <label>Name</label>
+    <InputText @bind-Value="registerUser.Name" class="form-control"></InputText>
+    <ValidationMessage For="@(()=>registerUser.Name)" />
+    <br /><br />
+    <label> Email</label>
+    <InputText @bind-Value="registerUser.Email" class="form-control"></InputText>
+    <ValidationMessage For="@(()=>registerUser.Email)" />
+    <br /><br />
+    <label> Password</label>
+    <InputText @bind-Value="registerUser.Password" class="form-control"></InputText>
+    <ValidationMessage For="@(()=>registerUser.Password)" />
+    <br /><br />
+    <label> Phone Number</label>
+    <InputText @bind-Value="registerUser.PhoneNumber" class="form-control"></InputText>
+    <ValidationMessage For="@(()=>registerUser.PhoneNumber)" />
+
+    <button type="submit" class="mt-4 btn btn-primary">Submit</button>
+    <button type="button" class="mt-4 btn btn-primary" @onclick="@(()=>registerUser= new RegisterUser())">Reset</button>
+
+</EditForm>
+
+@code {
+    public RegisterUser registerUser = new RegisterUser();
+    public async Task RegisteredUser()
+    {
+        
+        await authServiceRegister.Register(registerUser);
+        navigation.NavigateTo("/");
+        await _jsRuntime.InvokeVoidAsync("ShowMessage", "success", "Registration was successful!!");
+    }
+}

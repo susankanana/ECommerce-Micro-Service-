@@ -1,0 +1,55 @@
+﻿@page "/"
+@inject HttpClient Http
+@inject IJSRuntime _jsRuntime;
+
+
+<div class="row">
+    <ProductSearch></ProductSearch>
+    <div class="row">
+        @foreach (var product in products)
+        {
+            <SingleProduct product="product"></SingleProduct>
+        }
+    </div>
+
+
+</div>
+
+<button @onclick="ShowConfirmBox" class="btn btn-primary">Confirm You are In Session ?</button>
+@if (IsConfirmed)
+{
+    <p> Confirmed!!</p>
+}
+else
+{
+    <p> Pending...</p>
+}
+@code{
+    public List<Product> products = new List<Product>();
+
+    public bool IsConfirmed { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        //call api to get the products to display
+
+        var prods = await Http.GetFromJsonAsync<List<Product>>("sample-data/products.json");
+        if (prods.Any())
+        {
+            products = prods;
+        }
+
+    }
+
+    private async Task ShowConfirmBox()
+    {
+        //IsConfirmed = await _jsRuntime.InvokeAsync<bool>("confirm", "Confirm if you are in session");
+        // await _jsRuntime.InvokeVoidAsync("ShowMessage", "success", "You are A BLazor Guru!!"); //method name, arg1, arg2
+
+        //await _jsRuntime.InvokeVoidAsync("ShowMessage", "error", "You are A BLazor Idiot!!");
+       // await _jsRuntime.InvokeVoidAsync("ShowMessage", "success", "Do you want to continue");
+        await _jsRuntime.InvokeVoidAsync("ShowMessage", "success");
+        
+    }
+}

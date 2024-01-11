@@ -1,0 +1,63 @@
+﻿@page "/products"
+@inject HttpClient Http
+@using System.Globalization;
+<div class="row">
+
+    <div class="col-4">
+        <AddProducts @ref="addProduct" OnAddProduct="AddProduct"></AddProducts>
+    </div>
+
+    <div class="col-8">
+        <div class="row">
+            @foreach (var product in products)
+            {
+                <SingleProduct product="product" OnRemoveProduct= "RemoveProduct" OnEditProduct="EditProduct"></SingleProduct>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    public List<Product> products = new List<Product>();
+    protected override async Task OnInitializedAsync()
+    {
+
+        //call api to get the products to display
+
+        var productSaved = await Http.GetFromJsonAsync<List<Product>>("sample-data/products.json");
+        if (productSaved.Any())
+        {
+            products = productSaved;
+        }
+
+    }
+    public void AddProduct(Product newproduct)
+    {
+        //newproduct.ProductId = products.Count + 1;
+        var existingProduct = products.Find(p => p.ProductId == newproduct.ProductId);
+        if (existingProduct == null)
+        {
+            products.Add(newproduct);
+        }
+        existingProduct.ProductName = newproduct.ProductName;
+        existingProduct.ProductDescription = newproduct.ProductDescription;
+        existingProduct.ProductPrice = newproduct.ProductPrice;
+        existingProduct.Stock = newproduct.Stock;
+        existingProduct.CreatedDate = newproduct.CreatedDate;
+        existingProduct.Availability = newproduct.Availability;
+        existingProduct.ProductImages = newproduct.ProductImages;
+
+
+    }
+
+    public void RemoveProduct(Product product)
+    {
+        products.Remove(product);
+
+    }
+    public AddProducts addProduct;
+    public void EditProduct(Product product)
+    {
+        addProduct.EditProduct(product);
+    }
+}

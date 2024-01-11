@@ -1,0 +1,83 @@
+﻿<EditForm Model="@product" OnValidSubmit="AddedProduct">
+    <div class="row">
+        @foreach (var productImage in product.ProductImages)
+        {
+            <img src="@(string.IsNullOrWhiteSpace(productImage.Image)?
+"https://cdn.pixabay.com/photo/2019/04/01/17/05/the-text-of-the-4095909_1280.jpg":productImage.Image)" />
+        }
+    </div>
+
+    <h1> @(isEditHeader ? "Edit Product" : "Add New Product")</h1>
+    <label for="name">Name</label>
+    <InputText class="form-control" id="name" placeholder="Product Name" @bind-Value="product.ProductName"></InputText>
+    <br/>
+
+    <label for="description">Description</label>
+    <InputText class="form-control" id="description" placeholder="Product Description" @bind-Value="product.ProductDescription"></InputText>
+    <br/>
+
+    <label for="price">Price</label>
+    <InputNumber class="form-control" id="price" placeholder="Product Price" @bind-Value="product.ProductPrice"></InputNumber>
+    <br/>
+
+    <label for="stock">Stock</label>
+    <InputNumber class="form-control" id="stock" placeholder="Stock" @bind-Value="product.Stock"></InputNumber>
+    <br/>
+
+    <label for=" date">Date added</label>
+    <InputDate class="form-control" id="date" placeholder="Date Added" @bind-Value="product.CreatedDate"></InputDate>
+    <br/>
+    @{
+    var i = 0;
+    }
+
+    @foreach(var image in product.ProductImages)
+    {
+    i++;
+
+    <div class="d-flex">
+    <p>@i</p>
+    <InputText @bind-Value="image.Image" class="form-control"></InputText>
+    <button @onclick="@(()=>product.ProductImages.Remove(image))">
+    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x-circle-fill text-danger" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
+    </svg>
+    </button>
+    </div>
+    }
+
+    <button class="mt-4 btn btn-secondary"
+    @onclick="@(()=>@product.ProductImages.Add(new ProductImage()))"> Add New Image</button>
+   
+
+    <button @onclick="addNewProduct" class="mt-4 btn btn-primary">@(isEditing ? "Edit" : "Add Product")</button>
+</EditForm>
+
+@code {
+    public Product product { get; set; } = new Product();
+    public bool isEditing { get; set; } = false;
+    public bool isEditHeader { get; set; } = false;
+
+    [Parameter]
+    public EventCallback<Product> OnAddProduct { get; set; } //communicates with parent to add newly added product to list
+
+    public async Task addNewProduct()
+    {
+        await OnAddProduct.InvokeAsync(product);
+    }
+    public void EditProduct(Product productToEdit)
+    {
+        product = productToEdit;
+        isEditing = true;
+        isEditHeader = true;
+    }
+    private void AddedProduct()
+    {
+
+        Console.WriteLine(product.ProductName);
+        Console.WriteLine(product.ProductDescription);
+        Console.WriteLine(product.ProductPrice);
+        Console.WriteLine(product.Stock);
+        Console.WriteLine(product.CreatedDate);
+    }
+}

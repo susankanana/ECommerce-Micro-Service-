@@ -1,0 +1,33 @@
+﻿@page "/search"
+@inject HttpClient Http
+@inject IJSRuntime _jsRuntime;
+
+
+<div class="row">
+    <ProductSearch></ProductSearch>
+    <div class="row">
+        @foreach (var product in products)
+        {
+            <SingleProductCart product="product"></SingleProductCart>
+        }
+    </div>
+
+
+</div>
+@code{
+    public List<Product> products = new List<Product>();
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        //call api to get the products to display
+
+        var prods = await Http.GetFromJsonAsync<List<Product>>("sample-data/products.json");
+        if (prods.Any())
+        {
+            products = prods;
+        }
+
+    }
+}
+

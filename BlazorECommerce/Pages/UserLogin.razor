@@ -1,0 +1,79 @@
+﻿@page "/login"
+@inject NavigationManager navigation
+@inject HttpClient Http
+@inject IJSRuntime _jsRuntime
+@inject AuthServiceLogin authServicelogin;
+<EditForm Model="@users" OnValidSubmit="Login">
+    <DataAnnotationsValidator />
+    <label> Email</label>
+    <InputText @bind-Value="loginUser.UserName" class="form-control"></InputText>
+    <ValidationMessage For="@(()=>loginUser.UserName)" />
+    <br />
+    <label> Password</label>
+    <InputText @bind-Value="loginUser.Password" type="password" class="form-control"></InputText>
+    <ValidationMessage For="@(()=>loginUser.Password)" />
+    
+
+    <button type="submit" class="mt-4 btn btn-primary" @onclick="ShowConfirmBox">Submit</button>
+    <p>New user?<a class="text-success" href="/register">Register</a></p>
+    
+
+</EditForm>
+@code {
+    public LoginUser loginUser = new LoginUser();
+    public List<User> users = new List<User>();
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        //call api to get the products to display
+
+        var userSaved = await Http.GetFromJsonAsync<List<User>>("sample-data/users.json");
+        if (userSaved.Any())
+        {
+            users = userSaved;
+        }
+
+    }
+    // private void LoggedUser()
+    // {
+
+    //     Console.WriteLine(loginUser.Email);
+    //     Console.WriteLine(loginUser.Password);
+    // }
+    private async void Login()
+    {
+        //var user = users.Find(x => x.Email == loginUser.UserName);
+        // if(user == null)
+        // {
+        //     return;
+        // }
+        // var isValidPassword = user.Password == loginUser.Password;
+        // if (!isValidPassword)
+        // {
+        //     return;
+        // }
+        //Console.WriteLine($"Welcome{user.Name}");
+        var loginRequest = new LoginUser { UserName = loginUser.UserName, Password = loginUser.Password };
+        var response = await authServicelogin.Login(loginRequest);
+        if (response != null && response.Token != null)
+        {
+            //Store the token and update user states
+            //Redirect to another page if needed
+            navigation.NavigateTo("/");
+
+        }
+        else
+        {
+            await _jsRuntime.InvokeVoidAsync("ShowMessage", "error", "Invalid credentials");
+        }
+
+
+    }
+    private async Task ShowConfirmBox()
+    {
+        await _jsRuntime.InvokeVoidAsync("ShowMessage", "success", "You are now Logged in!!"); //method name, arg1, arg2
+      
+    }
+
+}

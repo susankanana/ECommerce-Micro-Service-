@@ -1,0 +1,55 @@
+﻿[
+  {
+    "ProductId": "813485B8-E659-4FC0-D897-08DC0AF09243",
+    "ProductName": "Hoodie",
+    "ProductDescription": "Pink Cotton Hoodie. Free size.",
+    "ProductPrice": 1000,
+    "Stock": 10,
+    "CreatedDate": "2024-01-01T17:36:51.3460000",
+    "Availability": "available",
+    "ProductImages": [
+      { "image": "https://media.istockphoto.com/id/1343972328/photo/blank-oversized-hooded-sweatshirt-mockup.jpg?s=1024x1024&w=is&k=20&c=-saw9SefCIPs07WMVfvkvMIfzqInicweh4d9U5AdF4k=" },
+      { "image": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcSbhJB-7bcc5TU9ytnWqLfgM-J8D1ttomw_hhzwVfl93RxQW3qqbcGuGGkT9Wjh3izIXCV2bT2Ku_hMyrmMUw2iyw5xc1cEuFe4yZX7awZp3EVGl7oEBRLFAgchgSyo8-OejGVJuFIQ9Q&usqp=CAc" }
+    ]
+  },
+  {
+    "ProductId": "813485B8-E659-4FC0-D897-08DC0AF09243",
+    "ProductName": "Trousers",
+    "ProductDescription": "Denim",
+    "ProductPrice": 1500,
+    "Stock": 12,
+    "CreatedDate": "2024-01-01T17:36:51.3460000",
+    "Availability": "available",
+    "ProductImages": [
+      { "image": "https://zdi.co.za/wp-content/uploads/2021/12/ladies-jean-1.jpg" },
+      { "image": "https://5.imimg.com/data5/BH/GQ/MY-74741254/ladies-dark-blue-plain-denim-jeans-500x500.jpg" }
+    ]
+  },
+  {
+    "ProductId": "813485B8-E659-4FC0-D897-08DC0AF09243",
+    "ProductName": "Sneakers",
+    "ProductDescription": "Nike sneakers",
+    "ProductPrice": 2000,
+    "Stock": 10,
+    "CreatedDate": "2024-01-01T17:36:51.3460000",
+    "Availability": "available",
+    "ProductImages": [
+      { "image": "https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/b31587b0-3d2a-4a59-b02e-720d4d0b8973/air-jordan-1-elevate-low-womens-shoes-Q630Pk.png" },
+      { "image": "https://cdn-images.buyma.com/imgdata/item/231103/0100528970/579044580/org.jpg" }
+    ]
+  },
+  {
+    "ProductId": "813485B8-E659-4FC0-D897-08DC0AF09243",
+    "ProductName": "Canvas",
+    "ProductDescription": "White canvas",
+    "ProductPrice": 1500,
+    "Stock": 10,
+    "CreatedDate": "2024-01-01T17:36:51.3460000",
+    "Availability": "available",
+    "ProductImages": [
+      { "image": "https://i.ebayimg.com/images/g/d5IAAOSw8clkuDvS/s-l1600.png" },
+      { "image": "https://i.ebayimg.com/images/g/1AcAAOSwcPxj8CmW/s-l960.png" }
+    ]
+  }
+
+]

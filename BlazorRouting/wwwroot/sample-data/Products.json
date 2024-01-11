@@ -1,0 +1,24 @@
+﻿[
+  {
+    "Id": 1,
+    "Name": "Monitors",
+    "Description": "Best Monitor",
+    "Price": "2000",
+    "Image": "https://cdn.pixabay.com/photo/2014/12/22/19/59/macbook-577758_640.jpg"
+  },
+  {
+    "Id": 2,
+    "Name": "Keyboards",
+    "Description": "Best Keyboards",
+    "Price": "500",
+    "Image": "https://cdn.pixabay.com/photo/2015/08/13/01/00/keyboard-886462_640.jpg"
+  },
+  {
+    "Id": 3,
+    "Name": "Laptop",
+    "Description": "Best Laptop",
+    "Price": "50000",
+    "Image": "https://cdn.pixabay.com/photo/2016/02/17/15/37/laptop-1205256_640.jpg"
+  }
+
+]

@@ -15,9 +15,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductService", "ProductSe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CartService", "CartService\CartService.csproj", "{2AE2DEDA-D48F-45D4-8C65-AE7883889374}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService", "OrderService\OrderService.csproj", "{66FA48B9-CF04-4527-B09A-AB77F2B8E466}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderService", "OrderService\OrderService.csproj", "{66FA48B9-CF04-4527-B09A-AB77F2B8E466}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RewardsService", "RewardsService\RewardsService.csproj", "{BE29CD90-393F-4E94-B4D6-2A30135F7E11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RewardsService", "RewardsService\RewardsService.csproj", "{BE29CD90-393F-4E94-B4D6-2A30135F7E11}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorRouting", "BlazorRouting\BlazorRouting.csproj", "{37F6AAD3-A5DC-4F4F-A300-4C47EB6AF5B4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorECommerce", "BlazorECommerce\BlazorECommerce.csproj", "{08C6C549-1494-4CF0-8E50-27C8E15D3607}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +61,14 @@ Global
 		{BE29CD90-393F-4E94-B4D6-2A30135F7E11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE29CD90-393F-4E94-B4D6-2A30135F7E11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE29CD90-393F-4E94-B4D6-2A30135F7E11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37F6AAD3-A5DC-4F4F-A300-4C47EB6AF5B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37F6AAD3-A5DC-4F4F-A300-4C47EB6AF5B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37F6AAD3-A5DC-4F4F-A300-4C47EB6AF5B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37F6AAD3-A5DC-4F4F-A300-4C47EB6AF5B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08C6C549-1494-4CF0-8E50-27C8E15D3607}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08C6C549-1494-4CF0-8E50-27C8E15D3607}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08C6C549-1494-4CF0-8E50-27C8E15D3607}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08C6C549-1494-4CF0-8E50-27C8E15D3607}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

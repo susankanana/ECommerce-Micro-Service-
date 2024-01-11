@@ -1,0 +1,32 @@
+﻿@inject NavigationManager _navigationManager;
+
+<div class="jumbotron">
+    <h1 class="display-4 text-center">Welcome to My Shop</h1>
+    <p class="lead text-center">Find  the best Products!! </p>
+    <p class="mt-4">
+        <input @onkeydown="SearchProduct"
+        @bind="_searchTerm"
+        @bind:event="oninput"
+               type="text"
+               placeholder="Search for a product..."
+               class="form-control form-control-lg" />
+    </p>
+</div>
+<a href="/search/Laptop"> Search Laptops</a>
+@* <a href="/search/{@_searchTerm}"> Search Laptops</a> *@
+
+
+@code {
+    public string _searchTerm { get; set; }
+
+    private void SearchProduct(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter") // only search if user has clicked on enter then proceed to searchresult page
+        {
+            //searching
+            //navigating programmatically
+            _navigationManager.NavigateTo($"/search/{_searchTerm}");
+        }
+        return;
+    }
+}
