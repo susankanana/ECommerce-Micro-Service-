@@ -1,0 +1,100 @@
+﻿@page "/addCoupon"
+@page "/addCoupon/{code}"
+@inject ICoupon _couponService
+@inject NavigationManager navigationManager
+<div class="row mt-10">
+    <div class="col-6">
+        <img class="h-100 w-100" src="https://cdn.pixabay.com/photo/2018/01/21/18/54/money-3097319_1280.jpg" />
+    </div>
+
+    <div class="col-6">
+        @if (selectedCoupon.CouponId == Guid.Empty)
+        {
+            <h1> Add Coupon</h1>
+        }
+        else
+        {
+            <h1> Update Coupon </h1>
+        }
+        <EditForm Model="@selectedCoupon" OnValidSubmit="addCoupon">
+            <DataAnnotationsValidator />
+
+            <div class="form-group p-2">
+                <label for="code">CouponCode</label>
+                <InputText type="text" class="form-control p-2" id="code" @bind-Value="@selectedCoupon.CouponCode" aria-describedby="name" />
+                <ValidationMessage For="@(()=>@selectedCoupon.CouponCode)" />
+            </div>
+
+            <div class="form-group p-2">
+                <label for="amount">Coupon Amount</label>
+                <InputNumber class="form-control p-2" id="amount" @bind-Value="@selectedCoupon.CouponAmount" aria-describedby="name" />
+                <ValidationMessage For="@(()=>@selectedCoupon.CouponAmount)" />
+            </div>
+
+            <div class="form-group p-2">
+                <label for="amount">Coupon Min Amount</label>
+                <InputNumber class="form-control p-2" id="minAmount" @bind-Value="@selectedCoupon.CouponMinAmount" aria-describedby="name" />
+                <ValidationMessage For="@(()=>@selectedCoupon.CouponMinAmount)" />
+            </div>
+            <div class="flex-row m-2" p-2>
+                @if (selectedCoupon.CouponId == Guid.Empty)
+                {
+                    <button type="submit" style="width:150px" class=" p-2 m-1 btn btn-primary">Add Coupon</button>
+                }
+                else
+                {
+
+                    <button type="submit" style="width:150px" class=" p-2 m-1 btn btn-primary">Update Coupon</button>
+
+                }
+
+                <button type="button" @onclick="@(()=> new Coupon())" style="width:100px" class="p-2 btn btn-secondary">Reset</button>
+            </div>
+
+        </EditForm>
+
+    </div>
+</div>
+
+@code {
+    [Parameter]
+
+    public string code { get; set; }
+
+    Coupon selectedCoupon = new Coupon();
+
+
+    private async Task addCoupon()
+    {
+        AddCouponDto coupon = new AddCouponDto()
+            {
+                CouponAmount = selectedCoupon.CouponAmount,
+                CouponCode = selectedCoupon.CouponCode,
+                CouponMinAmount = selectedCoupon.CouponMinAmount
+            };
+
+        if (selectedCoupon.CouponId == Guid.Empty || selectedCoupon.CouponId == null)
+        {
+            Console.WriteLine(selectedCoupon.CouponId);
+            var res = await _couponService.AddCoupon(coupon);
+            navigationManager.NavigateTo("/");
+        }
+        else
+        {
+            //update
+            var res = await _couponService.UpdateCoupon(selectedCoupon.CouponId, coupon);
+            navigationManager.NavigateTo("/");
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+
+        if (!string.IsNullOrWhiteSpace(code))
+        {
+            selectedCoupon = await _couponService.GetCoupon(code);
+        }
+
+    }
+
+}

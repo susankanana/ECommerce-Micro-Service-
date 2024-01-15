@@ -2,7 +2,8 @@
 @inject NavigationManager navigation
 @inject HttpClient Http
 @inject IJSRuntime _jsRuntime
-@inject AuthServiceLogin authServicelogin;
+@inject IAuthLogin authServicelogin
+@inject ILocalStorageService localStorage
 <EditForm Model="@users" OnValidSubmit="Login">
     <DataAnnotationsValidator />
     <label> Email</label>
@@ -60,6 +61,9 @@
         {
             //Store the token and update user states
             //Redirect to another page if needed
+            await SaveTokenToSecureStorage(response.Token);
+            await SaveUserIdToSecureStorage(response.User.Id.ToString());
+            await localStorage.SetItemAsStringAsync("userId", response.User.Id.ToString());
             navigation.NavigateTo("/");
 
         }
@@ -70,6 +74,17 @@
 
 
     }
+
+    private async Task SaveTokenToSecureStorage(string Token)
+    {
+        await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "authToken" , Token);
+    }
+
+    private async Task SaveUserIdToSecureStorage(string userId)
+    {
+        await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "userId", userId);
+    }
+
     private async Task ShowConfirmBox()
     {
         await _jsRuntime.InvokeVoidAsync("ShowMessage", "success", "You are now Logged in!!"); //method name, arg1, arg2

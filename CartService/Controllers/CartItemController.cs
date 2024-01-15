@@ -108,7 +108,7 @@ namespace CartService.Controllers
         }
 
         [HttpDelete("{ProductId}")]
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult<ResponseDto>> RemoveProductFromCart(Guid ProductId)
         {
             var isProductRemoved = await _cartItemService.RemoveProductFromCart(ProductId);

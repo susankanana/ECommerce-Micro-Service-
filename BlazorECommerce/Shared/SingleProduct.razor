@@ -1,7 +1,7 @@
-﻿<div class="card shadow col-4 p-4 m-2">
-        @foreach (var productImage in product.ProductImages)
+﻿<div class="card shadow col-5 p-4 m-2">
+    @foreach (var productImage in product.productImagesDtos)
         {
-            <img style="width: 200px" src="@productImage.Image" class="card-img-top" alt="product.ProductName">
+            <img style="width: auto; height: 150px" src="@productImage.Image" class="card-img-top" alt="product.ProductName">
         }
     
 
@@ -54,6 +54,7 @@
 
     public async Task removeProduct()
     {
+        Console.WriteLine(product.ProductId);
         await OnRemoveProduct.InvokeAsync(product);
     }
     [Parameter]

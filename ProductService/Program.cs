@@ -22,6 +22,15 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IProductImage, ProductImageService>();
 builder.Services.AddScoped<IProduct, ProductsService>();
 
+//Set cors policy
+builder.Services.AddCors(options => options.AddPolicy("policy1", build =>
+{
+
+    build.AllowAnyOrigin();
+    build.AllowAnyHeader();
+    build.AllowAnyMethod();
+}));
+
 //Service for connection to database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -48,6 +57,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseCors("policy1");
 
 app.MapControllers();
 

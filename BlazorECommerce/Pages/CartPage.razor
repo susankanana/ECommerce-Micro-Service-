@@ -1,0 +1,184 @@
+﻿@page "/cart"
+@inject ICart _cartService
+@inject IJSRuntime _jsRuntime
+@inject ILocalStorageService localStorage
+@* @using System.IdentityModel.Tokens.Jwt;
+ *@
+@if (cart == null || cart.Items.Count() == 0)
+{
+    <p><i> No Items in the Cart, Start Shopping!!!</i></p>
+}
+else
+{
+    <div class="card border mt-4 container">
+        <div class="card-header bg-dark text-light ml-0 row ">
+            <div class="col-6">
+                <h3 class="text-success"><i class="oi oi-cart"></i> &nbsp; Shopping Cart</h3>
+            </div>
+            <div class="col-6 text-end">
+                <a class="btn btn-outline-warning mt-2 btn-sm" href="/">Continue Shopping</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class=" d-none d-lg-block">
+                <div class="row text-info">
+                    <div class="col-lg-2">
+                    </div>
+                    <div class="col-lg-5">
+                        Product Details
+                    </div>
+                    <div class="col-lg-2">
+                        Price
+                    </div>
+                    <div class="col-lg-2">
+                        Quantity
+                    </div>
+                    <div class="col-lg-1">
+                    </div>
+                </div>
+            </div>
+            <hr />
+            @foreach (var item in cart.Items)
+            {
+                <div class="row h-100">
+                    @foreach (var image in item.Product.productImagesDtos)
+                    {
+                        <div class="col-4 col-md-2 text-center py-2">
+                            <img src="@image.Image" class="rounded" width="100%" />
+                        </div>
+                    }
+                    
+                    <div class="col-8 col-md-5">
+                        <h5>@item.Product.ProductName</h5>
+                        <div style="font-size:11px;">@item.Product.ProductDescription</div>
+                    </div>
+                    <div class="col-3 col-md-2 pt-md-4" style="font-size:11px;">
+                        <span style="font-size:17px;">@string.Format("{0:c}",item.Product.ProductPrice)</span>
+                    </div>
+                    <div class="col-3 col-md-2 pt-md-4 flex-row" style="font-size:11px;">
+                        @*<span style="font-size:17px;">@item.Count</span>*@
+                        <div class="flex-row">
+                            <button class="btn btn-danger" @onclick="@(()=>decrement(item))">Minus</button>
+                            <input @bind-value="@item.Quantity" />
+                            <button class="btn btn-success" @onclick="@(()=>updateQuantity(item))">Add</button>
+                    </div>
+                    </div>
+                    <div class="col-2 col-lg-1 p-0 pt-lg-4 text-center">
+                        <a @onclick="@(()=>RemoveItem(item.CartItemId))">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x-circle-fill text-danger" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
+                            </svg>
+                        </a>
+                    </div>
+                    <hr />
+                </div>
+            }
+
+        </div>
+        <div class="row">
+            @if (string.IsNullOrWhiteSpace(cart.CouponCode))
+            {
+                <div class="col-6">
+                    <span>Coupon:</span>
+                    <input @bind-value="code" />
+                    <button type="submit" class="btn btn-sm btn-success" @onclick="ApplyCoupon"> Apply </button>
+                </div>
+            }else{
+            <div class="col-6">
+                <span>Coupon:</span>
+                <input  @bind-value="cart.CouponCode" disabled/>
+                <button type="submit" class="btn btn-sm btn-danger" @onclick="RemoveCoupon"> Remove </button>
+            </div>
+            }
+            <div class="col-6 text-end">
+                <span class="text-danger" style="font-size:21px;">  Order Total : @cart.CartTotal.ToString("c0") <br /></span>
+                @if (cart.CouponDiscount>0)
+                {
+                    <span class="text-success"> Order Discount : @cart.CouponDiscount.ToString("c0")</span>
+                }
+            </div>
+        </div>
+        <hr/>
+        <div class="row p-2">
+            <div class="col-10"></div>
+            <div class="col-2 ">
+                <a class="btn btn-success" href="shipment">Place Order</a>
+            </div>
+        </div>
+    </div>
+}
+@code {
+    Cart cart = new Cart();
+    private string code = "";
+    protected override async Task OnInitializedAsync()
+    {
+        var userId = await localStorage.GetItemAsStringAsync("userId");
+        // Check if userId is not null before proceeding
+        if (!string.IsNullOrEmpty(userId))
+        {
+            // Convert userId to Guid and get the cart
+            cart = await _cartService.GetCartByUserId(new Guid(userId));
+
+            // Now you can use 'cart' as needed
+        }
+
+
+
+    }
+
+    private async Task ApplyCoupon()
+    {
+        var userId = await localStorage.GetItemAsStringAsync("userId");
+        var _cart = new Cart()
+        {
+           CouponCode = code,
+           UserId = new Guid(userId),
+        };
+        await _cartService.ApplyCoupon(_cart, code);
+        cart = await _cartService.GetCartByUserId(new Guid(userId));
+    }
+    private async Task RemoveCoupon()
+    {
+        var userId = await localStorage.GetItemAsStringAsync("userId");
+        var _cart = new Cart()
+            {
+                CouponCode = "",
+                UserId = new Guid(userId),
+            };
+        await _cartService.ApplyCoupon(_cart, "");
+        cart = await _cartService.GetCartByUserId(new Guid(userId));
+
+    }
+    private async Task decrement(CartItem item)
+    {
+        var userId = await localStorage.GetItemAsStringAsync("userId");
+
+        var _item = new AddCartItemDto()
+            {
+                ProductId = item.ProductId,
+                Quantity = -1
+            };
+        await _cartService.AddProductToCart(_item);
+        cart = await _cartService.GetCartByUserId(new Guid(userId));
+    }
+
+    private async Task updateQuantity(CartItem item)
+    {
+        var userId = await localStorage.GetItemAsStringAsync("userId");
+
+        var _item = new AddCartItemDto()
+            {
+                ProductId = item.ProductId,
+                Quantity = 1
+            };
+        await _cartService.AddProductToCart(_item);
+        cart = await _cartService.GetCartByUserId(new Guid(userId));
+    }
+
+    private async Task RemoveItem(Guid id)
+    {
+        await _cartService.RemoveProductFromCart(id);
+        var userId = await localStorage.GetItemAsStringAsync("userId");
+        cart = await _cartService.GetCartByUserId(new Guid(userId));
+    }
+}

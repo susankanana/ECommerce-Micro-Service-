@@ -1,10 +1,11 @@
 ﻿using BlazorECommerce.Models;
+using BlazorECommerce.Services.IService;
 using Newtonsoft.Json;
 using System.Text;
 
 namespace BlazorECommerce.Services
 {
-    public class AuthServiceLogin
+    public class AuthServiceLogin : IAuthLogin
     {
         private readonly HttpClient _httpClient;
         //private readonly string BASEURL = "https://thejitucommerceauthapi.azurewebsites.net";

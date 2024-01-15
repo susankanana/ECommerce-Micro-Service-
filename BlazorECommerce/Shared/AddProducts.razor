@@ -1,6 +1,7 @@
-﻿<EditForm Model="@product" OnValidSubmit="AddedProduct">
+﻿@inject IProduct _productService
+<EditForm Model="@product" OnValidSubmit="AddedProduct">
     <div class="row">
-        @foreach (var productImage in product.ProductImages)
+        @foreach (var productImage in product.productImagesDtos)
         {
             <img src="@(string.IsNullOrWhiteSpace(productImage.Image)?
 "https://cdn.pixabay.com/photo/2019/04/01/17/05/the-text-of-the-4095909_1280.jpg":productImage.Image)" />
@@ -27,18 +28,20 @@
     <label for=" date">Date added</label>
     <InputDate class="form-control" id="date" placeholder="Date Added" @bind-Value="product.CreatedDate"></InputDate>
     <br/>
+    <label>Image</label>
+    <InputFile></InputFile>
     @{
     var i = 0;
     }
 
-    @foreach(var image in product.ProductImages)
+    @foreach (var image in product.productImagesDtos)
     {
     i++;
 
     <div class="d-flex">
     <p>@i</p>
     <InputText @bind-Value="image.Image" class="form-control"></InputText>
-    <button @onclick="@(()=>product.ProductImages.Remove(image))">
+            <button @onclick="@(()=>product.productImagesDtos.Remove(image))">
     <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x-circle-fill text-danger" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
     <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
     </svg>
@@ -47,30 +50,51 @@
     }
 
     <button class="mt-4 btn btn-secondary"
-    @onclick="@(()=>@product.ProductImages.Add(new ProductImage()))"> Add New Image</button>
+    @onclick="@(()=>@product.productImagesDtos.Add(new ProductImage()))">
+        Add New Image
+    </button>
    
 
     <button @onclick="addNewProduct" class="mt-4 btn btn-primary">@(isEditing ? "Edit" : "Add Product")</button>
 </EditForm>
 
 @code {
+
     public Product product { get; set; } = new Product();
     public bool isEditing { get; set; } = false;
     public bool isEditHeader { get; set; } = false;
+
+    // [Parameter]
+    // public Product eProduct { get; set; }
+    [Parameter]
+
+    public Guid Id { get; set; }
+
 
     [Parameter]
     public EventCallback<Product> OnAddProduct { get; set; } //communicates with parent to add newly added product to list
 
     public async Task addNewProduct()
     {
+
+        if (isEditing)
+        {
+
+            ProductRequestDto theProduct = new ProductRequestDto()
+                {
+                    ProductName = product.ProductName,
+                    ProductDescription = product.ProductDescription,
+                    ProductPrice = product.ProductPrice,
+                    Stock = product.Stock,
+                    CreatedDate = product.CreatedDate,
+                    Availability = product.Availability,
+                    //ProductImages = productToEdit.ProductImages
+                };
+            await _productService.UpdateProduct(Id, theProduct);
+        }
         await OnAddProduct.InvokeAsync(product);
     }
-    public void EditProduct(Product productToEdit)
-    {
-        product = productToEdit;
-        isEditing = true;
-        isEditHeader = true;
-    }
+    
     private void AddedProduct()
     {
 
@@ -80,4 +104,20 @@
         Console.WriteLine(product.Stock);
         Console.WriteLine(product.CreatedDate);
     }
+
+
+    protected override async Task  OnParametersSetAsync()
+    {
+        if (Id == null || Id== Guid.Empty)
+        {
+            return;
+        }
+        product = await _productService.GetProductById(Id);
+        isEditing = true;
+        isEditHeader = true;
+
+        
+
+    }
+
 }

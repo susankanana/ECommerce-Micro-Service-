@@ -1,5 +1,6 @@
 ﻿@page "/"
 @inject HttpClient Http
+@inject IProduct _prosuctService
 <PageTitle>Index</PageTitle>
 
 <h2 style="font-family:Cambria; color:purple">Welcome to Boutique Mart</h2>
@@ -18,7 +19,8 @@ One stop shop for the modern woman..
 
         //call api to get the products to display
 
-        var productSaved = await Http.GetFromJsonAsync<List<Product>>("sample-data/products.json");
+        //var productSaved = await Http.GetFromJsonAsync<List<Product>>("sample-data/products.json");
+        var productSaved = await _prosuctService.GetProducts();
         if (productSaved.Any())
         {
             products = productSaved;

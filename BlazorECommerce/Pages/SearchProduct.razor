@@ -1,6 +1,7 @@
 ﻿@page "/search"
 @inject HttpClient Http
 @inject IJSRuntime _jsRuntime;
+@inject IProduct _productService
 
 
 <div class="row">
@@ -22,7 +23,8 @@
 
         //call api to get the products to display
 
-        var prods = await Http.GetFromJsonAsync<List<Product>>("sample-data/products.json");
+        //var prods = await Http.GetFromJsonAsync<List<Product>>("sample-data/products.json");
+        var prods = await _productService.GetProducts();
         if (prods.Any())
         {
             products = prods;

@@ -25,7 +25,7 @@ namespace ProductService.Controllers
         }
 
         [HttpPost("{Id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<ResponseDto>> AddImage(Guid Id, AddProductImageDto newImage)
         {
             var product = await _productService.GetProductById(Id);

@@ -830,3 +830,7 @@ C:\Users\user\source\repos\EcommerceMS\BlazorECommerce\bin\Debug\net7.0\wwwroot\
 C:\Users\user\source\repos\EcommerceMS\BlazorECommerce\bin\Debug\net7.0\wwwroot\_framework\Newtonsoft.Json.dll.gz
 C:\Users\user\source\repos\EcommerceMS\BlazorECommerce\bin\Debug\net7.0\Newtonsoft.Json.dll
 C:\Users\user\source\repos\EcommerceMS\BlazorECommerce\obj\Debug\net7.0\build-gz\dpU3DE0s.gz
+C:\Users\user\source\repos\EcommerceMS\BlazorECommerce\bin\Debug\net7.0\wwwroot\_framework\Blazored.LocalStorage.dll
+C:\Users\user\source\repos\EcommerceMS\BlazorECommerce\bin\Debug\net7.0\wwwroot\_framework\Blazored.LocalStorage.dll.gz
+C:\Users\user\source\repos\EcommerceMS\BlazorECommerce\bin\Debug\net7.0\Blazored.LocalStorage.dll
+C:\Users\user\source\repos\EcommerceMS\BlazorECommerce\obj\Debug\net7.0\build-gz\V0aFmM4E.gz

@@ -1,5 +1,7 @@
 ﻿@page "/search/{searchTerm}"
 @inject HttpClient Http
+@inject IProduct _productService
+
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -38,7 +40,8 @@ else
 
     protected override async Task OnInitializedAsync() //life cycle method
     {
-        var prods = await Http.GetFromJsonAsync<List<Product>>("sample-data/products.json");
+        //var prods = await Http.GetFromJsonAsync<List<Product>>("sample-data/products.json");
+        var prods = await _productService.GetProducts();
 
         //list of all the products
 

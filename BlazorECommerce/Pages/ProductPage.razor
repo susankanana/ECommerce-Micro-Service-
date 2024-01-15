@@ -1,10 +1,12 @@
 ﻿@page "/products"
 @inject HttpClient Http
+@inject IProduct _productService
+@inject NavigationManager navigationManager
 @using System.Globalization;
 <div class="row">
 
     <div class="col-4">
-        <AddProducts @ref="addProduct" OnAddProduct="AddProduct"></AddProducts>
+        <AddProducts  Id="@guid" OnAddProduct="AddProduct"></AddProducts>
     </div>
 
     <div class="col-8">
@@ -19,45 +21,78 @@
 
 @code {
     public List<Product> products = new List<Product>();
+
+    public Guid guid { get; set; }
+    // public Product editedProduct;
     protected override async Task OnInitializedAsync()
     {
 
         //call api to get the products to display
 
-        var productSaved = await Http.GetFromJsonAsync<List<Product>>("sample-data/products.json");
+        // var productSaved = await Http.GetFromJsonAsync<List<Product>>("sample-data/products.json");
+        // if (productSaved.Any())
+        // {
+        //     products = productSaved;
+        // }
+        var productSaved = await _productService.GetProducts();
         if (productSaved.Any())
         {
             products = productSaved;
         }
 
     }
-    public void AddProduct(Product newproduct)
+
+    public async Task AddProduct(Product newproduct)
     {
         //newproduct.ProductId = products.Count + 1;
+        // var existingProduct = products.Find(p => p.ProductId == newproduct.ProductId);
+        // if (existingProduct == null)
+        // {
+        //     products.Add(newproduct);
+        // }
+        // existingProduct.ProductName = newproduct.ProductName;
+        // existingProduct.ProductDescription = newproduct.ProductDescription;
+        // existingProduct.ProductPrice = newproduct.ProductPrice;
+        // existingProduct.Stock = newproduct.Stock;
+        // existingProduct.CreatedDate = newproduct.CreatedDate;
+        // existingProduct.Availability = newproduct.Availability;
+        // existingProduct.ProductImages = newproduct.ProductImages;
+        ProductRequestDto theProduct = new ProductRequestDto()
+            {
+                ProductName = newproduct.ProductName,
+                ProductDescription=newproduct.ProductDescription,
+                ProductPrice = newproduct.ProductPrice,
+                Stock = newproduct.Stock,
+                CreatedDate= newproduct.CreatedDate,
+                Availability=newproduct.Availability,
+                ProductImages = newproduct.productImagesDtos
+    };
+
         var existingProduct = products.Find(p => p.ProductId == newproduct.ProductId);
+
         if (existingProduct == null)
         {
-            products.Add(newproduct);
+
+            var res = await _productService.AddProduct(theProduct);
+            navigationManager.NavigateTo("/");
         }
-        existingProduct.ProductName = newproduct.ProductName;
-        existingProduct.ProductDescription = newproduct.ProductDescription;
-        existingProduct.ProductPrice = newproduct.ProductPrice;
-        existingProduct.Stock = newproduct.Stock;
-        existingProduct.CreatedDate = newproduct.CreatedDate;
-        existingProduct.Availability = newproduct.Availability;
-        existingProduct.ProductImages = newproduct.ProductImages;
 
 
     }
 
-    public void RemoveProduct(Product product)
+    public async Task RemoveProduct(Product product)
     {
+        //products.Remove(product);
+        Console.WriteLine(product.ProductName);
+        var res = await _productService.DeleteProduct(product.ProductId);
         products.Remove(product);
-
     }
-    public AddProducts addProduct;
+    
     public void EditProduct(Product product)
     {
-        addProduct.EditProduct(product);
+
+         guid = product.ProductId;
+        // editedProduct = product;
+
     }
 }

@@ -27,7 +27,7 @@ namespace CartService.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
 
         public async Task<ActionResult<ResponseDto>> GetExistingCarts()
         {
@@ -40,7 +40,7 @@ namespace CartService.Controllers
 
 
         [HttpGet("view/{UserId}")]
-        [Authorize]
+       // [Authorize]
         public async Task<ActionResult<ResponseDto>> ViewCart(Guid UserId)
         {
             var cart = await _cartService.GetCartByUserId(UserId);

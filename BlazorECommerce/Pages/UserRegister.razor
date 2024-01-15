@@ -1,6 +1,6 @@
 ﻿@page "/register"
 @inject NavigationManager navigation
-@inject AuthServiceRegister authServiceRegister
+@inject IAuthRegister authServiceRegister
 @inject IJSRuntime _jsRuntime
 
 <EditForm Model="@registerUser" OnValidSubmit="RegisteredUser">

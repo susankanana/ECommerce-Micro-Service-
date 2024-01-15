@@ -24,7 +24,7 @@ namespace ProductService.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<ResponseDto>> AddProduct(AddProductDto newProduct)
         {
             var product = _mapper.Map<Product>(newProduct);
@@ -36,7 +36,7 @@ namespace ProductService.Controllers
 
 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
 
         public async Task<ActionResult<ResponseDto>> GetProducts()
         {
@@ -65,7 +65,7 @@ namespace ProductService.Controllers
         }
 
         [HttpPut("{Id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<ResponseDto>> UpdateProduct(Guid Id, AddProductDto updProduct)
         {
             var product = await _productService.GetProductById(Id);
@@ -82,7 +82,7 @@ namespace ProductService.Controllers
         }
 
         [HttpDelete("{Id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<ResponseDto>> DeleteProduct(Guid Id)
         {
             var product = await _productService.GetProductById(Id);

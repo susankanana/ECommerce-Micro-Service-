@@ -21,6 +21,15 @@ builder.Services.AddScoped<ICartItem, CartItemService>();
 builder.Services.AddHttpClient("Coupons", c => c.BaseAddress = new Uri(builder.Configuration.GetValue<string>("ServiceURl:CouponService")));
 builder.Services.AddHttpClient("Products", c => c.BaseAddress = new Uri(builder.Configuration.GetValue<string>("ServiceURl:ProductService")));
 
+//Set cors policy
+builder.Services.AddCors(options => options.AddPolicy("policy1", build =>
+{
+
+    build.AllowAnyOrigin();
+    build.AllowAnyHeader();
+    build.AllowAnyMethod();
+}));
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 //Service for connection to database
@@ -49,6 +58,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseCors("policy1");
 
 app.MapControllers();
 

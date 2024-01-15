@@ -1,7 +1,8 @@
-﻿<div class="card shadow col-4 m-3 p-4" style="width: 18rem;">
-    @foreach (var productImage in product.ProductImages)
+﻿@inject ICart _cartService
+<div class="card shadow col-3 p-4 m-2" >
+    @foreach (var productImage in product.productImagesDtos)
     {
-        <img src="@productImage.Image" class="card-img-top" alt="product.ProductName">
+        <img style="width: auto; height: 150px" src="@productImage.Image" class="card-img-top" alt="product.ProductName">
     }
     <div class="card-body">
         <h5 class="card-title">@product.ProductName</h5>
@@ -13,15 +14,31 @@
             <span>
                 @product.ProductPrice
             </span>
+            <span>
+                <input class="form-control" @bind-value="@quantity"/>
+            </span>
+
         </div>
-        <button class="btn btn-primary m-1 justify-content-around">Add To Cart</button>
+        <button class="btn btn-primary m-1 justify-content-around" @onclick="AddToCart">Add To Cart</button>
     </div>
 </div>
 
 
 @code {
 
+    private int quantity { get; set; } = 1;
     [Parameter]
 
-    public Product product { get; set; } = default!; 
+    public Product product { get; set; } = default!;
+
+    private async Task AddToCart()
+    {
+        var cartItem = new AddCartItemDto()
+            {
+                ProductId = product.ProductId,
+                ProductPrice = product.ProductPrice,
+                Quantity = quantity
+            };
+        await _cartService.AddProductToCart(cartItem);
+    }
 }

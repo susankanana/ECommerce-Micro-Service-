@@ -13,7 +13,7 @@ namespace BlazorECommerce.Models
         public int Stock { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Today;
         public string Availability { get; set; } = "Available";
-        public List<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
+        public List<ProductImage> productImagesDtos { get; set; } = new List<ProductImage>();
     }
     public class ProductImage
     {
